@@ -1,0 +1,40 @@
+# === Global Node.js (for CBFront) ===
+**/node_modules/
+**/dist/
+**/.vite/
+**/.parcel-cache/
+
+# Logs
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# Env Files
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Vite Cache
+**/.vite/
+
+# === Global Java/Gradle (for CBBack) ===
+**/.gradle/
+**/build/
+**/out/
+**/.idea/
+**/.classpath
+**/.project
+**/.settings/
+**/target/
+**/logs/
+**/*.log
+
+# Eclipse & IntelliJ specific
+**/.vscode/
+**/.DS_Store
+**/*.iml
+
+# OS Files
+Thumbs.db
+.DS_Store

@@ -1,0 +1,117 @@
+/* Reset */
+
+
+  body {
+    overflow: hidden; /* prevent scroll */
+    background-color: white;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  /* Container centered using flex */
+  .login-container {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    top:17vh;
+    background-color: white;
+  }
+  
+  /* Box */
+  .login-box {
+    width: 30vw;
+    padding: 3vh 3vw 4vw;
+    border: 0.1vh  white;
+    border-radius: 1vh;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.1);
+ 
+  }
+  
+  /* Logo */
+  .login-logo {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .login-logo img {
+    max-width: 25vh;
+  
+  }
+  
+  /* Form */
+  .login-form {
+    display: flex;
+
+    flex-direction: column;
+  }
+  
+  .login-form-group {
+    margin-bottom: 2vh;
+  }
+  
+  .login-label {
+    display: block;
+    margin-bottom: 1vh;
+    font-weight: bold;
+   
+  }
+  
+  .login-input {
+    width: 100%;
+    padding: 1.2vh 1vw;
+    font-size: 1rem;
+    border: 0.1vh solid #ccc;
+    background-color: white;
+    border-radius: 0.8vh;
+    color: black;
+  }
+  
+  .login-input::placeholder {
+    color: gray;
+  }
+  
+  .login-input:focus {
+    outline: none;
+    border-color: #007bff; /* Or #ccc if you want no change */
+  }
+  /* Forgot password */
+  .login-forgot {
+    text-align: right;
+    margin-bottom: 2vh;
+  }
+  
+  .login-forgot a {
+    font-size: 0.9rem;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .login-forgot a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Button */
+  .login-button {
+    padding: 1.5vh;
+    background-color: #007bff;
+    position: relative;
+    top: 3vh;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 0.8vh;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .login-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Error */
+  .login-error {
+    color: red;
+    text-align: center;
+    margin-top: 5vh;
+  }
+  
+ 
