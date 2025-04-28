@@ -3,9 +3,12 @@ package com.example.cloudbalance.services.impl;
 import com.example.cloudbalance.dto.AccountDto;
 import com.example.cloudbalance.dto.CreateAccountRequest;
 import com.example.cloudbalance.entity.AccountEntity;
+import com.example.cloudbalance.entity.UserEntity;
 import com.example.cloudbalance.repository.AccountRepository;
+import com.example.cloudbalance.repository.UserRepository;
 import com.example.cloudbalance.services.interfaces.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +20,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public List<AccountDto> getAllAccounts() {
         return accountRepository.findAll()
@@ -24,6 +30,17 @@ public class AccountServiceImpl implements AccountService {
                 .map(a -> new AccountDto(a.getId(), a.getAccountName(),a.getAccountNumber()))
                 .collect(Collectors.toList());
     }
+
+    public List<AccountDto> getAccountsByCustomerUsername(String username) {
+        // Assuming a user has a list of assigned accounts
+        UserEntity user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return user.getAccounts().stream()
+                .map(a -> new AccountDto(a.getId(), a.getAccountName(), a.getAccountNumber()))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public AccountEntity createAccount(CreateAccountRequest request) {
         AccountEntity account = new AccountEntity();

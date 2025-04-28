@@ -1,5 +1,6 @@
 package com.example.cloudbalance.services.impl;
 
+import com.example.cloudbalance.dto.Ec2InstanceDto;
 import com.example.cloudbalance.services.interfaces.AwsEc2FetcherService;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
@@ -19,7 +20,7 @@ import java.util.Map;
 @Service
 public class AwsEc2FetcherServiceImpl implements AwsEc2FetcherService {
 
-    public List<Map<String, Object>> fetchInstances(String roleArn, String region) {
+    public List<Ec2InstanceDto> fetchInstances(String roleArn, String region) {
         // Step 1: Assume the role
         StsClient stsClient = StsClient.builder()
                 .region(Region.of(region))
@@ -45,18 +46,28 @@ public class AwsEc2FetcherServiceImpl implements AwsEc2FetcherService {
                 .build();
 
         DescribeInstancesResponse response = ec2Client.describeInstances();
-        List<Map<String, Object>> instanceList = new ArrayList<>();
+        List<Ec2InstanceDto> instanceList = new ArrayList<>();
 
         for (Reservation reservation : response.reservations()) {
             for (Instance instance : reservation.instances()) {
-                Map<String, Object> instanceInfo = new HashMap<>();
-                instanceInfo.put("instanceId", instance.instanceId());
-                instanceInfo.put("state", instance.state().nameAsString());
-                instanceInfo.put("type", instance.instanceTypeAsString());
-                instanceInfo.put("launchTime", instance.launchTime().toString());
-                instanceList.add(instanceInfo);
+                // Extract Name tag if available
+                String instanceName = instance.tags().stream()
+                        .filter(tag -> "Name".equals(tag.key()))
+                        .map(Tag::value)
+                        .findFirst()
+                        .orElse("Unnamed");
+
+                Ec2InstanceDto instanceDto = new Ec2InstanceDto(
+                        instance.instanceId(),                // resourceId
+                        instance.state().nameAsString(),      // status
+                        instanceName,                         // resourceName
+                        region                                // region
+                );
+
+                instanceList.add(instanceDto);
             }
         }
+
 
         return instanceList;
     }

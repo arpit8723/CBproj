@@ -1,7 +1,9 @@
 package com.example.cloudbalance.services.impl;
 
+import com.example.cloudbalance.dto.AccountDto;
 import com.example.cloudbalance.dto.LoginRequestDto;
 import com.example.cloudbalance.entity.UserEntity;
+import com.example.cloudbalance.enums.Role;
 import com.example.cloudbalance.exception.InvalidCredentialsException;
 import com.example.cloudbalance.repository.UserRepository;
 import com.example.cloudbalance.services.interfaces.AuthService;
@@ -11,6 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -23,7 +29,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
 
 
     @Override
@@ -44,3 +49,5 @@ public class AuthServiceImpl implements AuthService {
         return jwtUtil.generateToken(user);
     }
 }
+
+

@@ -29,9 +29,9 @@ public class UserController {
 
     // ✅ Admin can fetch all users
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'READONLY')")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto    > users = userService.getAllUsers();
+        List<UserResponseDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 

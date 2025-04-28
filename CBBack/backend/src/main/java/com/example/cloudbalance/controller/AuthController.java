@@ -8,6 +8,7 @@ import com.example.cloudbalance.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -29,6 +30,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
         String token = authService.login(loginRequestDto);
         Map<String, String> response = Map.of("token", token);
+
         return ResponseEntity.ok(response);
     }
 

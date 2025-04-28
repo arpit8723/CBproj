@@ -10,6 +10,8 @@ import java.time.Instant;
 @Setter
 @Entity
 @AllArgsConstructor
+
+@Table(name = "blacklisted_token")
 public class BlacklistedToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +20,7 @@ public class BlacklistedToken {
     @Column(nullable = false, unique = true, length = 500)
     private String token;
 
-    @Column(nullable = false)
+    @Column(name="blacklisted_at",nullable = false)
     private Instant blacklistedAt;
 
     public BlacklistedToken(String token, Instant blacklistedAt){

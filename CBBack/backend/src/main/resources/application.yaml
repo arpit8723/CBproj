@@ -8,17 +8,17 @@ spring:
       add-mappings: false
 
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/cloudbalance
-    username: root
-    password: root@123
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/cloudbalance
+#    username: root
+#    password: root@123
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQLDialect
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
 
 jwt:
   secret: my_super_secure_jwt_key_which_is_definitely_long_enough_1234567890!

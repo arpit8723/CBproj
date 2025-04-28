@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,13 +22,22 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'READONLY')")
     @GetMapping("/get")
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
-        return ResponseEntity.ok(accountService.getAllAccounts());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // This is usually the subject/username
+        boolean isCustomer = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("CUSTOMER"));
+        List<AccountDto> accountDtos = isCustomer
+                ? accountService.getAccountsByCustomerUsername(username)
+                : accountService.getAllAccounts();
+
+        return ResponseEntity.ok(accountDtos);
+
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'READONLY')")
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<AccountEntity> createAccount(@Valid @RequestBody CreateAccountRequest request) {
         return ResponseEntity.ok(accountService.createAccount(request));

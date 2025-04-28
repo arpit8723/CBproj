@@ -9,5 +9,6 @@ import java.util.List;
 public interface AccountService {
     List<AccountEntity> getOrphanAccounts();
     List<AccountDto> getAllAccounts();
+    List<AccountDto> getAccountsByCustomerUsername(String username);
     AccountEntity createAccount(CreateAccountRequest request);
 }

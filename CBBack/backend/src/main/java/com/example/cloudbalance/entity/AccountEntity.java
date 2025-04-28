@@ -15,6 +15,7 @@ public class AccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "account_name")
     private String accountName;
 
     private String arn;

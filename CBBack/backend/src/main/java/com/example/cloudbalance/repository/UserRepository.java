@@ -9,6 +9,4 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     Optional<UserEntity> findByEmail(String email);
     long countByAccounts_IdAndIdNot(Long accountId, Long userIdToExclude);
 
-
-
 }

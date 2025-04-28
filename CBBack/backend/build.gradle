@@ -32,7 +32,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'software.amazon.awssdk:aws-sdk-java:2.20.114' // General AWS SDK
+//	implementation 'software.amazon.awssdk:aws-sdk-java:2.20.114' // General AWS SDK
 	implementation 'software.amazon.awssdk:s3:2.20.114' // For S3
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -42,7 +42,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.4'
 	implementation 'software.amazon.awssdk:sts:2.25.0'
+	implementation 'software.amazon.awssdk:rds:2.25.0'
 	implementation 'software.amazon.awssdk:ec2:2.25.0'
+	implementation 'software.amazon.awssdk:autoscaling:2.25.0'
+	implementation 'net.snowflake:snowflake-jdbc:3.23.1'
+
+
 
 }
 
