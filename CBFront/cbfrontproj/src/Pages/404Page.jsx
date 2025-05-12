@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { sidebarConfig } from '../Config/sidebarConfig';
 
@@ -7,7 +7,6 @@ import { Box, Typography, CircularProgress, Fade } from '@mui/material';
 import { FaSadTear } from 'react-icons/fa';
 
 const NotFoundPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const { token, role } = useSelector((state) => state.auth);
 

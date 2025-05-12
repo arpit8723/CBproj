@@ -1,5 +1,6 @@
 package com.example.cloudbalance.services.interfaces;
 
+import com.example.cloudbalance.dto.CustomerInfoDto;
 import com.example.cloudbalance.dto.UserCreateRequestDto;
 import com.example.cloudbalance.dto.UserResponseDto;
 import com.example.cloudbalance.dto.UserUpdateDTO;
@@ -13,4 +14,8 @@ public interface UserService {
     List<UserResponseDto> getAllUsers();
 
     void updateUser(Long userId, UserUpdateDTO userUpdateDTO);
+
+    public boolean hasAccessToAccount(String email, String accountNumber);
+
+    public List<CustomerInfoDto> getAllCustomers();
 }

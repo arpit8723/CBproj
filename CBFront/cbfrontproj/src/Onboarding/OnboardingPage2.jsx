@@ -13,7 +13,7 @@ import ob21 from "../assets/ob21.png"
 import ob22 from "../assets/ob22.png"
 import ob23 from "../assets/ob23.png"
 import ob24 from "../assets/ob24.png"
-import JsonViewerWithCopy from '../components/JsonViewerWithCopy'; // adjust path as needed
+import JsonViewerWithCopy from '../components/JsonViewerWithCopy'; 
 import { initialPolicies, additionalPolicy } from "../components/policySnippets";
 import CopyBlock from "../components/CopyBlock";
 

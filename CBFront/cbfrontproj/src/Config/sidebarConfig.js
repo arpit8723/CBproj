@@ -12,8 +12,10 @@ export const sidebarConfig = {
     ],
 
     READONLY:[
+      { name: "User Management", path: "/usermanagement" },
         {name:"Cost Explorer",path:"/costexplorer"},
         {name:"AWS Services Info",path:"/aws"}
+
     ]
   };
   

@@ -64,12 +64,12 @@
                 try {
                     if (jwtUtil.validateToken(token)) {
                         email = jwtUtil.getEmailFromToken(token);
-                        System.out.println(email);
+
 
 
                         Long lastActivity = activityTracker.getLastActivity(email);
                         long now = System.currentTimeMillis();
-                        System.out.println(now);
+
 
                         if (lastActivity != null && now - lastActivity > INACTIVITY_LIMIT) {
                             activityTracker.remove(email);
@@ -83,22 +83,45 @@
 
 
                         String role = jwtUtil.getClaimFromToken(token, "role");
+                        String username = jwtUtil.getClaimFromToken(token, "username");//new
 
 
                         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                            UsernamePasswordAuthenticationToken auth =
-                                    new UsernamePasswordAuthenticationToken(
-                                            email,
-                                            null,
-                                            List.of(new SimpleGrantedAuthority(role))
-                                    );
+                            if (jwtUtil.isImpersonationToken(token)) {
+                                String originalEmail = jwtUtil.getOriginalEmailFromToken(token);
+                                String originalRole = jwtUtil.getOriginalRoleFromToken(token);
+                                String originalUsername = jwtUtil.getClaimFromToken(token, "originalUsername");
 
-                            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                            SecurityContextHolder.getContext().setAuthentication(auth);
-                            Authentication authAfter = SecurityContextHolder.getContext().getAuthentication();
-                            System.out.println("SecurityContext Auth: " + authAfter);
-                            System.out.println("SecurityContext Authorities: " + authAfter.getAuthorities());
+                                // Create impersonation authentication
+                                ImpersonationAuthenticationToken auth = new ImpersonationAuthenticationToken(
+                                        email,
+                                        null,
+                                        List.of(new SimpleGrantedAuthority(role)),
+                                        originalEmail,
+                                        originalRole,
+                                        originalUsername
+                                );
 
+                                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                                // Log impersonation activity
+
+                            } else {
+                                UsernamePasswordAuthenticationToken auth =
+                                        new UsernamePasswordAuthenticationToken(
+                                                email,
+                                                null,
+                                                List.of(new SimpleGrantedAuthority(role))
+                                        );
+
+                                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                                SecurityContextHolder.getContext().setAuthentication(auth);
+//                            Authentication authAfter = SecurityContextHolder.getContext().getAuthentication();
+//                            System.out.println("SecurityContext Auth: " + authAfter);
+//                            System.out.println("SecurityContext Authorities: " + authAfter.getAuthorities());
+
+                            }
                         }
                     }
 

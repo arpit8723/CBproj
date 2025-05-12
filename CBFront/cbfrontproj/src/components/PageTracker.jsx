@@ -10,7 +10,6 @@ const PageTracker = () => {
   const { role } = useSelector((state) => state.auth);
   
   useEffect(() => {
-    // Only track allowed pages
     if (role && sidebarConfig[role]) {
       const allowedPaths = sidebarConfig[role].map(item => item.path);
       if (allowedPaths.includes(location.pathname)) {
@@ -19,7 +18,7 @@ const PageTracker = () => {
     }
   }, [location.pathname, role]);
   
-  return null; // This component doesn't render anything
+  return null; 
 };
 
 export default PageTracker;

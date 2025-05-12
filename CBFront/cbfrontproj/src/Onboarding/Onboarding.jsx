@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, CardContent, Typography, Button, Box } from '@mui/material';
 import { FiArrowRight, FiSettings } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 
 const Onboarding = () => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
 
   const handleNext = () => {
-    navigate('/onboarding/Process'); // Navigate to OnboardingPage1 (Step 1)
+    navigate('/onboarding/Process'); 
   };
 
   return (

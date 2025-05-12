@@ -28,7 +28,7 @@ const ThankYouPage = () => {
           width: '100%', 
           py: 5, 
           textAlign: 'center', 
-          transform: 'translateY(-140px)' // move card a bit up
+          transform: 'translateY(-140px)' 
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>

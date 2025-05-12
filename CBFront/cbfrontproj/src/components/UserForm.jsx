@@ -9,6 +9,9 @@ import {
   Select,
   FormHelperText,
 } from '@mui/material';
+import { selectAuth } from '../redux/slices/authSlice';
+import { useSelector } from 'react-redux';
+
 
 const UserForm = ({
   editingUser,
@@ -26,15 +29,18 @@ const UserForm = ({
   const [tempSelected, setTempSelected] = useState([]);
   const [tempDeselected, setTempDeselected] = useState([]);
   const [errors, setErrors] = useState({});
-  // Store original accounts when editing a user
+  const { username: loggedInUsername } = useSelector(selectAuth);
+const isSelfEdit = editingUser && editingUser.username === loggedInUsername;
+
+ 
   const [originalAccounts, setOriginalAccounts] = useState([]);
 
   useEffect(() => {
-    // When editing a user who is a CUSTOMER, store their original accounts
+   
     if (editingUser && role === 'CUSTOMER') {
       setOriginalAccounts([...selectedAccounts]);
     }
-  }, [editingUser, role]);
+  }, [editingUser, role]);  
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -54,16 +60,16 @@ const UserForm = ({
     if (role === 'CUSTOMER') {
       fetchAccounts();
       
-      // If we're editing a user who was previously a CUSTOMER and switching back to CUSTOMER
+   
       if (editingUser && originalAccounts.length > 0) {
         setSelectedAccounts(originalAccounts);
       }
     } else {
-      // If switching to a non-CUSTOMER role, only clear accounts if we're creating a new user
+      
       if (!editingUser) {
         setSelectedAccounts([]);
       }
-      // Don't clear accounts if editing an existing user
+    
     }
   }, [role, token, editingUser, originalAccounts]);
 
@@ -85,7 +91,7 @@ const UserForm = ({
   const onSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // If submitting with a non-CUSTOMER role, clear selectedAccounts
+  
       if (role !== 'CUSTOMER' && editingUser) {
         setSelectedAccounts([]);
       }
@@ -93,10 +99,10 @@ const UserForm = ({
     }
   };
 
-  // Handle role change to preserve accounts for CUSTOMER role when editing
+
   const handleRoleChange = (newRole) => {
     setRole(newRole);
-    // If changing FROM customer role and editing, save current accounts
+
     if (role === 'CUSTOMER' && editingUser) {
       setOriginalAccounts([...selectedAccounts]);
     }
@@ -147,20 +153,23 @@ const UserForm = ({
           fullWidth
         />
 
-        <FormControl fullWidth error={!!errors.role}>
-          <InputLabel>Role *</InputLabel>
-          <Select
-            value={role}
-            label="Role *"
-            onChange={(e) => handleRoleChange(e.target.value)}
-          >
-            <MenuItem value="">Select Role</MenuItem>
-            <MenuItem value="ADMIN">ADMIN</MenuItem>
-            <MenuItem value="CUSTOMER">CUSTOMER</MenuItem>
-            <MenuItem value="READONLY">READONLY</MenuItem>
-          </Select>
-          <FormHelperText>{errors.role}</FormHelperText>
-        </FormControl>
+{!isSelfEdit && (
+  <FormControl fullWidth error={!!errors.role}>
+    <InputLabel>Role *</InputLabel>
+    <Select
+      value={role}
+      label="Role *"
+      onChange={(e) => handleRoleChange(e.target.value)}
+    >
+      <MenuItem value="">Select Role</MenuItem>
+      <MenuItem value="ADMIN">ADMIN</MenuItem>
+      <MenuItem value="CUSTOMER">CUSTOMER</MenuItem>
+      <MenuItem value="READONLY">READONLY</MenuItem>
+    </Select>
+    <FormHelperText>{errors.role}</FormHelperText>
+  </FormControl>
+)}
+
 
         <div className="col-span-2 text-right">
           <Button

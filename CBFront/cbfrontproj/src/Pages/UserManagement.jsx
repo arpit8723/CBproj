@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   fetchUsers,
   createUser,
@@ -12,7 +14,7 @@ import UserForm from '../components/UserForm';
 
 const UserManagement = () => {
   const dispatch = useDispatch();
-  const { token } = useSelector(selectAuth);
+  const { token, role: loggedInRole } = useSelector(selectAuth);
   const { users, isLoading, error } = useSelector(selectUsers);
 
   const [editingUser, setEditingUser] = useState(null);
@@ -57,20 +59,45 @@ const UserManagement = () => {
           data: payload,
           token
         })).unwrap();
-        alert('User updated successfully!');
+        // Replace alert with toast
+        toast.success(`User ${form.username} updated successfully!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       } else {
         await dispatch(createUser(payload)).unwrap();
-        alert('User created successfully!');
+        // Replace alert with toast
+        toast.success(`User ${form.username} created successfully!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
 
       resetFormState();
       dispatch(fetchUsers());
     } catch (err) {
-      alert('Failed to update user: ' + err.message);
+      // Replace alert with toast for errors
+      toast.error(`Account with this E-mail already exists`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
   const handleEdit = (user) => {
+    if (loggedInRole === 'READONLY') return;
     setEditingUser(user);
     setForm({ username: user.username, email: user.email, password: '' });
     setRole(user.role);
@@ -94,16 +121,21 @@ const UserManagement = () => {
 
   return (
     <div className="p-4 max-w-full mx-auto">
+      {/* Add ToastContainer to render toasts */}
+      <ToastContainer />
+      
       {!showForm ? (
         <>
           <div className="flex flex-col items-start gap-3 mb-5">
             <h1 className="text-2xl font-bold">All Users</h1>
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-            >
-              ✚ Add User
-            </button>
+            {loggedInRole !== 'READONLY' && (
+              <button
+                onClick={() => setShowForm(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                ✚ Add User
+              </button>
+            )}
           </div>
 
           {isLoading ? (
@@ -120,6 +152,7 @@ const UserManagement = () => {
               setRoleFilter={setRoleFilter}
               filterOpen={filterOpen}
               setFilterOpen={setFilterOpen}
+              canEdit={loggedInRole !== 'READONLY'}
             />
           )}
         </>

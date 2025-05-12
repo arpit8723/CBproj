@@ -1,12 +1,13 @@
 // src/redux/slices/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { customFetch } from '../../Config/CustomFetch';
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (_, { getState, rejectWithValue }) => {
     const token = getState().auth.token;
     try {
-      const res = await fetch('http://localhost:8080/api/users/all', {
+      const res = await customFetch('http://localhost:8080/api/users/all', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -26,7 +27,7 @@ export const createUser = createAsyncThunk(
   async (payload, { getState, rejectWithValue }) => {
     const token = getState().auth.token;
     try {
-      const res = await fetch('http://localhost:8080/api/users/create', {
+      const res = await customFetch('http://localhost:8080/api/users/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +80,7 @@ export const updateUserThunk = createAsyncThunk(
     'users/update',
     async ({ userId, data, token }, thunkAPI) => {
       try {
-        const response = await fetch(`http://localhost:8080/api/users/update/${userId}`, {
+        const response = await customFetch(`http://localhost:8080/api/users/update/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

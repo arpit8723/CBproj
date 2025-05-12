@@ -1,5 +1,6 @@
 // onboardingSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { customFetch } from '../../Config/CustomFetch';
 
 // Async thunk for submitting the onboarding data
 export const submitOnboardingData = createAsyncThunk(
@@ -10,7 +11,7 @@ export const submitOnboardingData = createAsyncThunk(
       console.log('Token:', token);
       console.log('Form config:', JSON.stringify(formConfig, null, 2));
 
-      const response = await fetch('http://localhost:8080/api/accounts/create', {
+      const response = await customFetch('http://localhost:8080/api/accounts/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

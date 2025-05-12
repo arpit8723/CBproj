@@ -1,9 +1,6 @@
 package com.example.cloudbalance.services.impl;
 
-import com.example.cloudbalance.dto.AccountDto;
-import com.example.cloudbalance.dto.UserCreateRequestDto;
-import com.example.cloudbalance.dto.UserResponseDto;
-import com.example.cloudbalance.dto.UserUpdateDTO;
+import com.example.cloudbalance.dto.*;
 import com.example.cloudbalance.entity.AccountEntity;
 import com.example.cloudbalance.entity.UserEntity;
 import com.example.cloudbalance.enums.Role;
@@ -12,6 +9,7 @@ import com.example.cloudbalance.repository.AccountRepository;
 import com.example.cloudbalance.repository.UserRepository;
 import com.example.cloudbalance.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -91,48 +89,18 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-//    public void updateUser(Long id, UserUpdateDTO dto) {
-//        UserEntity user = userRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
-//
-//        user.setUsername(dto.getUsername());
-//        user.setEmail(dto.getEmail());
-//
-//        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-//            user.setPassword(passwordEncoder.encode(dto.getPassword()));
-//        }
-//
-//        Role newRole = Role.valueOf(dto.getRole());
-//
-//        if (newRole != Role.CUSTOMER && dto.getAccountIds() != null && !dto.getAccountIds().isEmpty()) {
-//            throw new IllegalArgumentException("Only customers can be assigned accounts.");
-//        }
-//        if (user.getRole() == Role.CUSTOMER && newRole != Role.CUSTOMER) {
-//            for (AccountEntity account : user.getAccounts()) {
-//                long count = userRepository.countByAccounts_IdAndIdNot(account.getId(), user.getId());
-//                if (count == 0) {
-//                    account.setOrphan(true);
-//                    accountRepository.save(account);
-//                }
-//            }
-//            user.getAccounts().clear(); // Remove association
-//        }
-//        if (newRole == Role.CUSTOMER && dto.getAccountIds() != null) {
-//            Set<AccountEntity> accounts = new HashSet<>(accountRepository.findAllById(dto.getAccountIds()));
-//            for (AccountEntity account : accounts) {
-//                account.setOrphan(false);
-//            }
-//            user.setAccounts(accounts);
-//            accountRepository.saveAll(accounts);
-//        }
-//        user.setRole(newRole);
-//        userRepository.save(user);
-//        System.out.println("working fine ");
-//
-//    }
     public void updateUser(Long id, UserUpdateDTO dto) {
+
+
+        String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+
+        if (user.getUsername().equals(loggedInUsername) &&
+                !user.getRole().name().equals(dto.getRole())) {
+            throw new IllegalArgumentException("Users cannot change their own role.");
+        }
 
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
@@ -147,10 +115,6 @@ public class UserServiceImpl implements UserService {
             throw new AccountAssignmentException("Only customers can be assigned accounts.");
         }
 
-//        Set<AccountEntity> newAccounts = new HashSet<>();
-//        if (newRole == Role.CUSTOMER && dto.getAccountIds() != null) {
-//            newAccounts.addAll(accountRepository.findAllById(dto.getAccountIds()));
-//        }
         Set<AccountEntity> newAccounts = null;
         if (newRole == Role.CUSTOMER && dto.getAccountIds() != null) {
             newAccounts = new HashSet<>(accountRepository.findAllById(dto.getAccountIds()));
@@ -192,6 +156,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    public boolean hasAccessToAccount(String email, String accountNumber) {
+        // Find the user by email
+        return userRepository.findByEmail(email)
+                .map(user -> {
+                    // Admins can access any account
+                    if ((user.getRole() == Role.ADMIN )||(user.getRole()==Role.READONLY)) {
+                        return true;
+                    }
 
+                    // For customers, check if the account is in their account list
+                    return user.getAccounts().stream()
+                            .anyMatch(account -> account.getAccountNumber().equals(accountNumber));
+                })
+                .orElse(false);
+    }
 
+    public List<CustomerInfoDto> getAllCustomers() {
+        List<UserEntity> customers = userRepository.findAllByRole(Role.CUSTOMER);
+        return customers.stream()
+                .map(user -> new CustomerInfoDto(user.getId(), user.getUsername(), user.getEmail()))
+                .collect(Collectors.toList());
+    }
 }
+
+
+

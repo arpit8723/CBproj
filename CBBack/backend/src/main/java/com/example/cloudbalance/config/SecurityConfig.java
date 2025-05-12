@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/switch-user").hasAuthority("ADMIN")
                         .requestMatchers("/api/accounts/get").hasAnyAuthority("ADMIN", "CUSTOMER", "READONLY")
                         .anyRequest().authenticated()
                 )

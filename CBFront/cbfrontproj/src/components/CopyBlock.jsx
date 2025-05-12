@@ -13,10 +13,6 @@ const CopyBlock = ({ value, fontSize = 14 }) => {
     setOpenSnackbar(true);
   };
 
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") return;
-    setOpenSnackbar(false);
-  };
 
   return (
     <>

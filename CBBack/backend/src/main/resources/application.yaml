@@ -23,6 +23,8 @@ spring:
 jwt:
   secret: my_super_secure_jwt_key_which_is_definitely_long_enough_1234567890!
   expiration: 86400000
+  impersonation:
+    expiration: 3600000
 
 server:
   error:

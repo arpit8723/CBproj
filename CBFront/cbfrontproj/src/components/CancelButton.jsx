@@ -12,7 +12,7 @@ const CancelButton = ({ sx }) => {
   const handleClick = () => {
     dispatch(resetForm()); 
 
-    navigate("/onboarding"); // Adjust if your onboarding start page is on a different route
+    navigate("/onboarding");
   };
 
   return (

@@ -1,5 +1,6 @@
 package com.example.cloudbalance.controller;
 
+import com.example.cloudbalance.dto.CustomerInfoDto;
 import com.example.cloudbalance.dto.UserCreateRequestDto;
 import com.example.cloudbalance.dto.UserResponseDto;
 import com.example.cloudbalance.dto.UserUpdateDTO;
@@ -18,6 +19,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+
 
     // ✅ Admin can create a user
     @PostMapping("/create")
@@ -42,6 +45,11 @@ public class UserController {
             @RequestBody @Valid UserUpdateDTO dto) {
         userService.updateUser(id, dto);
         return "update successful";
+    }
+    @GetMapping("/customers")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<CustomerInfoDto> getAllCustomers() {
+        return userService.getAllCustomers();
     }
 
 
